@@ -1,10 +1,3 @@
-/* Example code for Think OS.
-
-Copyright 2014 Allen Downey
-License: GNU GPLv3
-
-*/
-
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -12,7 +5,7 @@ License: GNU GPLv3
 
 int *foo() {
     int i;
-    int array[SIZE];
+    int array[SIZE]; // local array
 
     printf("%p\n", array);
 
@@ -24,7 +17,7 @@ int *foo() {
 
 void bar() {
     int i;
-    int array[SIZE];
+    int array[SIZE]; //  local array
 
     printf("%p\n", array);
 
@@ -36,7 +29,7 @@ void bar() {
 int main()
 {
     int i;
-    int *array = foo();
+    int *array = foo(); // assigning a pointer to a function's local array
     bar();
 
     for (i=0; i<SIZE; i++) {
@@ -45,3 +38,8 @@ int main()
 
     return 0;
 }
+
+/* The arrays initialized in foo() and bar() are located at the same address.
+ * Both arrays were local variables that were only stored in the stack while
+ * their respective functions were running.
+ */
