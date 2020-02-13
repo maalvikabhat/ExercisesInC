@@ -1,5 +1,4 @@
 /* Example code for Exercises in C.
-
 */
 
 #include <stdio.h>
@@ -20,7 +19,6 @@ int factorial(int n) {
 
 
 /* fibonacci: Computes fibonacci(n).
-
     Specifically, the Fibonacci series with F(0) = 0 and F(1) = 1
 */
 int fibonacci(int n) {
