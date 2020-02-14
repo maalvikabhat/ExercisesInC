@@ -1,4 +1,5 @@
-/* Example code for Exercises in C.
+/* Maalvika Bhat SoftSys2020
+Example code for Exercises in C.
 Modified version of an example from Chapter 2.5 of Head First C.
 */
 

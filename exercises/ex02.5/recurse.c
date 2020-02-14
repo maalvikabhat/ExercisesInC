@@ -1,4 +1,5 @@
-/* Example code for Exercises in C.
+/* Maalvika Bhat SoftSys2020
+Example code for Exercises in C.
 */
 
 #include <stdio.h>
