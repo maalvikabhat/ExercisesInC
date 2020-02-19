@@ -1,17 +1,11 @@
 /* Example code for Software Systems at Olin College.
-
 Instructions:
-
 1) Fill in the body of endswith so it passes the tests.
-
 You can use any of the functions in string.h
 https://www.tutorialspoint.com/c_standard_library/string_h.htm
-
 2) Remove the TODO comment.
-
 Copyright 2017 Allen Downey
 License: Creative Commons Attribution-ShareAlike 3.0
-
 */
 
 #include <stdio.h>
@@ -20,7 +14,6 @@ License: Creative Commons Attribution-ShareAlike 3.0
 #include <assert.h>
 
 /* endswith: Checks whether s ends with suffix.
-
 s: string
 suffix: string
 returns: 1 if true, 0 otherwise
