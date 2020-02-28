@@ -1,8 +1,6 @@
 /* Example code for Software Systems at Olin College.
-
 Copyright 2017 Allen Downey
 License: Creative Commons Attribution-ShareAlike 3.0
-
 */
 
 #include <stdio.h>
@@ -12,7 +10,6 @@ License: Creative Commons Attribution-ShareAlike 3.0
 #include "endswith.h"
 
 /* endswith: Checks whether s ends with suffix.
-
 s: string
 suffix: string
 returns: 1 if true, 0 otherwise

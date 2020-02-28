@@ -1,60 +1,36 @@
 /* Example code for Exercises in C.
-
 This program shows a way to represent a BigInt type (arbitrary length integers)
 using C strings, with numbers represents as a string of decimal digits in reverse order.
-
 This program contains two deliberate errors as a debugging exercise.
-
 1) Compile and run this program like this:
-
 gcc -g -std=c99 bigbadint.c
 ./a.out
-
 You should see that reverse_string passes its test,
 but itoc and add_digits don't.
-
 2) Read the GDB tutorial at
-
 http://web.eecs.umich.edu/~sugih/pointers/summary.html
-
 3) Start gdb like this:
-
 gdb a.out
-
 4) At the gdb prompt, type
-
 run
-
 to run the program.  Since itoc is failing, let's look at
 its source code:
-
 list itoc
-
 And set a break point at the beginning of itoc
-
 break itoc
-
 Now if you run the program again, it should stop every time
 itoc is called, and you'll be able to see the value of the parameter.
-
 To run a single line of code, type
-
 step
-
 To print the value of a variable
-
 print i
-
 5) Read the descriptions of step and next, try them out, and make
 sure you know the difference.
-
 6) See if you can find the error in itoc, and fix it.
-
 7) In main, uncomment the line that calls test_reverse_string_again.
 Compile and run the program again.  You should see that
 reverse_string is actually not correct, even though it passes
 its test.  See if you can debug it.
-
 */
 
 #include <stdio.h>
@@ -64,9 +40,7 @@ its test.  See if you can debug it.
 #include <assert.h>
 
 /* reverse_string: Returns a new string with the characters reversed.
-
 It is the caller's responsibility to free the result.
-
 s: string
 returns: string
 */
@@ -88,7 +62,6 @@ char *reverse_string(char *s) {
 }
 
 /* ctoi: Converts a character to integer.
-
 c: one of the characters '0' to '9'
 returns: integer 0 to 9
 */
@@ -98,7 +71,6 @@ int ctoi(char c) {
 }
 
 /* itoc: Converts an integer to character.
-
 i: integer 0 to 9
 returns: character '0' to '9'
 */
@@ -108,16 +80,13 @@ char itoc(int i) {
 }
 
 /* add_digits: Adds two decimal digits, returns the total and carry.
-
 For example, if a='5', b='6', and carry='1', the sum is 12, so
 the output value of total should be '2' and carry should be '1'
-
 a: character '0' to '9'
 b: character '0' to '9'
 c: character '0' to '9'
 total: pointer to char
 carry: pointer to char
-
 */
 void add_digits(char a, char b, char c, char *total, char *carry) {
     int sum = ctoi(a) + ctoi(b) + ctoi(c);
@@ -132,9 +101,7 @@ void add_digits(char a, char b, char c, char *total, char *carry) {
 typedef char * BigInt;
 
 /* add_bigint: Adds two BigInts
-
 Stores the result in z.
-
 x: BigInt
 y: BigInt
 carry_in: char
@@ -180,7 +147,6 @@ void add_bigint(BigInt x, BigInt y, char carry_in, BigInt z) {
 }
 
 /* print_bigint: Prints the digits of BigInt in the normal order.
-
 big: BigInt
 */
 void print_bigint(BigInt big) {
@@ -191,9 +157,7 @@ void print_bigint(BigInt big) {
 }
 
 /* make_bigint: Creates and returns a BigInt.
-
 Caller is responsible for freeing.
-
 s: string of digits in the usual order
 returns: BigInt
 */
