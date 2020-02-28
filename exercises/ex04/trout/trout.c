@@ -3,28 +3,11 @@
 /* variables we might want to configure */
 Rec *rec = (Rec *) sendbuf;
 
-/* NOTES: system calls beginning with a capital letter are Stevens's
-   wrapper functions.  Each one invokes the method and checks the
-   return value.  If the call fails, it invokes err_sys, which prints
-   the error message and quits.
-   Types that begin with a capital letter are usually typedefs
-   that I added because (1) I hate seeing the word struct all over
-   the place, and (2) it lets me pretend I am writing Java. */
-
-/* sig_alrm: alarm handler sends a message to the process through
-   a pipe, causing select to return */
-
 void sig_alrm (int signo)
 {
   Write (pipefd[1], "", 1);  /* write 1 null byte to pipe */
   return;
 }
-
-/* process_ip: extracts all the info from an incoming ICMP packet
-     Just for kicks, I changed the BSD-style names of the ICMP
-     errors to Linux-style names, mostly so that they will be
-     consistent with the changes I made in the kernel and so my
-     head won't explode. */
 
 int process_ip (struct ip *ip, int len)
 {
@@ -57,10 +40,6 @@ int process_ip (struct ip *ip, int len)
   if (udp->source != htons (sport)) return 0;
   if (udp->dest != htons (dport + seq)) return 0;
 
-  /* now we know it's an ICMP packet caused by a UDP
-     datagram sent by us and sent to the port we happen to
-     be sending to.  It's probably one of ours. */
-
   if (icmp->icmp_type == ICMP_TIME_EXCEEDED) {
     if (icmp->icmp_code == ICMP_EXC_TTL) {
       return -2;
@@ -79,30 +58,7 @@ int process_ip (struct ip *ip, int len)
   return 0;
 }
 
-/* recv_dgram: reads all incoming datagrams and checks for
-   returning ICMP packets.
-   returns -3 on timeout,
-           -2 on ICMP time exceeded in transit (we reached a router)
-	   -1 on ICMP port unreachable (we reached the destination)
-	    0 on ICMP that has nothing to do with us  */
 
-  /* as Stevens points out in Section 18.5 of Unix Network Programming,
-     many programs with alarms have a race condition, which is that
-     the alarm might go off before we get to the recvfrom, in which
-     case it does nothing and the recvfrom might wait indefinitely.
-     In earlier versions of this code, this problem seemed to pop
-     up occasionally (although I am not positive about that).
-     The use of select here solves that problem.  When the alarm
-     goes off, the alarm handler sends a message through the pipe,
-     which is one of the things select waits for.
-     When select returns, we know that we have received a datagram
-     OR the alarm has gone off OR both.  We then use rset to find
-     out which, and deal with it.
-     According to the specification of select, it should not be possible
-     to get to the recvfrom unless there is a datagram waiting, and
-     therefore the recvfrom should never block.  Nevertheless, it sometimes
-     does, which is why, when we opened it, we set the NONBLOCK flag
-     and why, if it fails (errno = EAGAIN) we just go on. */
 
 int recv_dgram ()
 {
