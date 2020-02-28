@@ -19,7 +19,7 @@ It has been modified a fair amount by Allen Downey
 
 4) I fixed a race condition that may or may not have been the
    cause of some early problems I had.  Anyway, the fix also
-   came from Stevens, in Section 18.5 of Unix Network Programming.
+   came from Stevens, in Section 18.5 of Unix Network Programming. 
 
 5) I split things up into more procedures.
 
