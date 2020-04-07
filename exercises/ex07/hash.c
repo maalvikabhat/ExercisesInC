@@ -1,8 +1,6 @@
 /* Example code for Exercises in C.
-
 Copyright 2016 Allen Downey
 License: Creative Commons Attribution-ShareAlike 3.0
-
 */
 
 #include <stdio.h>
@@ -77,13 +75,10 @@ void print_value (Value *value)
 // HASHABLE: Represents a key in a key-value pair.
 
 /* Here's another way to make a polymorphic object.
-
 The key can be any pointer type.  It's stored as a (void *), so
 when you extract it, you have to cast it back to whatever it is.
-
 `hash` is a pointer to a function that knows how to hash the key.
 `equal` is a pointer to a function that knows how to compare keys.
-
 */
 
 typedef struct {
@@ -178,7 +173,9 @@ int hash_hashable(Hashable *hashable)
 */
 int equal_int (void *ip, void *jp)
 {
-    // FILL THIS IN!
+    int a = *(int*) ip;
+    int b = *(int*) jp;
+    if (a == b) return 1;
     return 0;
 }
 
@@ -192,7 +189,12 @@ int equal_int (void *ip, void *jp)
 */
 int equal_string (void *s1, void *s2)
 {
-    // FILL THIS IN!
+    char** sA = (char**)s1;
+    char** sB = (char**)s2;
+    // printf("%s  %s\n", sA, sB);
+    int res = strcmp(sA, sB);
+    // printf("%i\n", res);
+    if (res == 0) return 1;
     return 0;
 }
 
@@ -200,15 +202,19 @@ int equal_string (void *s1, void *s2)
 /* Compares Hashables.
 *
 * h1: Hashable
-* h2: Hashable of the same type
+* h2: Hashable of the same type <- this is a lie :/
 *
 * returns: 1 if equal, 0 otherwise
 *
 */
 int equal_hashable(Hashable *h1, Hashable *h2)
 {
-    // FILL THIS IN!
-    return 0;
+    if (h1->equal != h2->equal) {
+        return 0;
+    }
+    // printf("h1 key: %i    h2 key: %i\n", h1->key, h2->key);
+    // printf("h1 key: %s    h2 key: %s\n", h1->key, h2->key);
+    return h1->equal(h1->key, h2->key);
 }
 
 
@@ -284,7 +290,6 @@ void print_list(Node *node)
 
 
 /* Prepends a new key-value pair onto a list.
-
 This is actually a synonym for make_node.
 */
 Node *prepend(Hashable *key, Value *value, Node *rest)
@@ -296,7 +301,15 @@ Node *prepend(Hashable *key, Value *value, Node *rest)
 /* Looks up a key and returns the corresponding value, or NULL */
 Value *list_lookup(Node *list, Hashable *key)
 {
-    // FILL THIS IN!
+    Node *current = list;
+    int res = equal_hashable(list->key, key);
+
+    while (res == 0 && current->next != NULL) {
+        current = current->next;
+        res = equal_hashable(current->key, key);
+    }
+
+    if (res == 1) return current->value;
     return NULL;
 }
 
@@ -328,10 +341,9 @@ Map *make_map(int n)
 void print_map(Map *map)
 {
     int i;
-
     for (i=0; i<map->n; i++) {
         if (map->lists[i] != NULL) {
-            printf ("%d\n", i);
+            printf ("%i\n", i);
             print_list (map->lists[i]);
         }
     }
@@ -341,14 +353,31 @@ void print_map(Map *map)
 /* Adds a key-value pair to a map. */
 void map_add(Map *map, Hashable *key, Value *value)
 {
-    // FILL THIS IN!
+    hash_hashable(key);
+    for (int i = 0; i < map->n; i++) {
+        if (map->lists[i] != NULL) {
+            map->lists[i] = prepend(key, value, map->lists[i]);
+            return;
+        }
+    }
+    map->lists[0] = make_node(key, value, NULL);
+    // map->lists = prepend(key, value, map->lists);
+    // map->n++;
 }
 
 
 /* Looks up a key and returns the corresponding value, or NULL. */
 Value *map_lookup(Map *map, Hashable *key)
 {
-    // FILL THIS IN!
+    Value* v;
+    for (int i=0; i<map->n; i++) {
+        if (map->lists[i] != NULL) {
+            v = list_lookup(map->lists[i], key);
+            if (v != NULL) {
+                return v;
+            }
+        }
+    }
     return NULL;
 }
 
