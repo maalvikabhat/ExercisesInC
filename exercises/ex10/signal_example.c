@@ -1,13 +1,9 @@
 /* Example code for Exercises in C.
-
 Copyright 2014 Allen Downey
 License: MIT License
-
 Based on an example from
 https://raw.githubusercontent.com/twcamper/head-first-c/master/10/math-master.c
-
 Based on an example in Head First C.
-
 */
 
 #include <stdio.h>
@@ -21,7 +17,6 @@ Based on an example in Head First C.
 int score = 0;
 
 /* Set up a signal handler.
-
    sig: signal number
    handler: signal handler function
 */
