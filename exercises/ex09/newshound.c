@@ -1,7 +1,5 @@
 /* Example from Head First C.
-
 Downloaded from https://github.com/twcamper/head-first-c
-
 Modified by Allen Downey.
 */
 
@@ -22,6 +20,10 @@ void error(char *msg)
 
 int main(int argc, char *argv[])
 {
+    int status;
+    pid_t pid;
+    int i;
+
     if (argc < 2) {
         fprintf(stderr, "Usage: %s <search phrase>\n", argv[0]);
         return 1;
@@ -39,14 +41,44 @@ int main(int argc, char *argv[])
     char *search_phrase = argv[1];
     char var[255];
 
-    for (int i=0; i<num_feeds; i++) {
-        sprintf(var, "RSS_FEED=%s", feeds[i]);
-        char *vars[] = {var, NULL};
+    for (i=0; i<num_feeds; i++) {
+        printf("Creating forked feed %d............\n", i);
+        pid = fork(); // Create a new fork
 
-        int res = execle(PYTHON, PYTHON, SCRIPT, search_phrase, NULL, vars);
-        if (res == -1) {
-            error("Can't run script.");
+        if (pid == -1) {
+            fprintf(stderr, "Fork failed: %s\n", strerror(errno));
+            perror(argv[0]);
+            exit(1);
         }
+
+        if (pid == 0) {
+            sleep(i);
+            sprintf(var, "RSS_FEED=%s", feeds[i]);
+            char *vars[] = {var, NULL};
+            int res = execle(PYTHON, PYTHON, SCRIPT, search_phrase, NULL, vars);
+            if (res == -1) {
+                error("Can't run script.");
+            }
+            exit(i);
+        }        
     }
-    return 0;
+
+    for (i=0; i<5; i++) {
+        pid = wait(&status); // Wait for the child
+
+        if (pid == -1) {
+            fprintf(stderr, "wait failed: %s\n", strerror(errno));
+            perror(argv[0]);
+            exit(1);
+        }
+
+        // check the exit status of the child
+        status = WEXITSTATUS(status);
+        printf("Feed %d exited with error code %d.\n", pid, status);
+    }
+
+    // Parent thread is done waiting for child processes
+    printf("Done searching feeds!\n");
+
+    exit(0);
 }
