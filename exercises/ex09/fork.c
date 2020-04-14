@@ -1,8 +1,6 @@
 /* Example code for Exercises in C.
-
 Copyright 2016 Allen B. Downey
 License: MIT License https://opensource.org/licenses/MIT
-
 */
 
 #include <stdio.h>
@@ -19,6 +17,9 @@ License: MIT License https://opensource.org/licenses/MIT
 // error information
 extern int errno;
 
+// this is a global int value that should be shared by all the
+// child processes
+int global_int;
 
 // get_seconds returns the number of seconds since the
 // beginning of the day, with microsecond precision
@@ -34,6 +35,23 @@ void child_code(int i)
 {
     sleep(i);
     printf("Hello from child %d.\n", i);
+    // The address of the global int should be the same for all the children
+    printf("This is the address of global_int : %p\n", &global_int);
+    
+    int* local;
+
+    if (i == 0) {
+        local = malloc(sizeof(int) * 5);
+        for (int j = 0; j < 5; j++) {
+            local[j] = j + 1;
+        }
+        sleep(5);
+        free(local);
+    } else {
+        // We should be able to access the array that was allocated
+        // by the first child
+        printf("READ : %p\n", &local[i]);
+    }
 }
 
 // main takes two parameters: argc is the number of command-line
